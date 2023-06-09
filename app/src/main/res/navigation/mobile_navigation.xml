@@ -8,12 +8,12 @@
     <fragment
         android:id="@+id/nav_all"
         android:name="com.pedrogobira.pretium.view.AllServicesFragment"
-        android:label="@string/todos_convidados"
+        android:label="@string/todos_servicos"
         tools:layout="@layout/fragment_all" />
 
     <fragment
         android:id="@+id/nav_present"
         android:name="com.pedrogobira.pretium.view.PresentFragment"
-        android:label="@string/presentes"
+        android:label="@string/servicos_por_mes"
         tools:layout="@layout/fragment_present" />
 </navigation>
