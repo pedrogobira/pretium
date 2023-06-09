@@ -68,7 +68,7 @@ class ServiceFormActivity : AppCompatActivity(), View.OnClickListener,
                 return
             }
 
-            if (hours > 24 || minutes > 60) {
+            if (!(hours in 0..23 && minutes in 0..59 )) {
                 Toast.makeText(this, "Horas ou minutos inválidos", Toast.LENGTH_SHORT).show()
                 return
             }
@@ -82,9 +82,8 @@ class ServiceFormActivity : AppCompatActivity(), View.OnClickListener,
                 return
             }
 
-
             val serviceModel = ServiceModel(
-                id = 0,
+                id = serviceId,
                 pricePerHour = pricePerHour,
                 hours = hours,
                 minutes = minutes,
@@ -139,7 +138,19 @@ class ServiceFormActivity : AppCompatActivity(), View.OnClickListener,
             binding.editHours.setText(it.hours.toString())
             binding.editMinutes.setText(it.minutes.toString())
             binding.editPricePerHour.setText(it.pricePerHour.toString())
-            binding.textDateValue.text = "${it.day}/${it.month}/${it.year}"
+
+            var monthStr = (it.month).toString()
+            var dayStr = it.day.toString()
+
+            if (monthStr.length == 1) {
+                monthStr = "0$monthStr"
+            }
+
+            if (dayStr.length == 1) {
+                dayStr = "0$dayStr"
+            }
+
+            binding.textDateValue.text = "$dayStr/$monthStr/${it.year}"
             binding.editDescription.setText(it.description)
         })
     }

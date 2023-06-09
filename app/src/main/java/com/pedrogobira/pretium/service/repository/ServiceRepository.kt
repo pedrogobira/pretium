@@ -173,6 +173,7 @@ class ServiceRepository private constructor(context: Context) {
             val db = serviceDatabaseHelper.readableDatabase
 
             val projection = arrayOf(
+                DatabaseConstants.SERVICE.COLUMNS.ID,
                 DatabaseConstants.SERVICE.COLUMNS.DESCRIPTION,
                 DatabaseConstants.SERVICE.COLUMNS.PRICE_PER_HOUR,
                 DatabaseConstants.SERVICE.COLUMNS.HOURS,

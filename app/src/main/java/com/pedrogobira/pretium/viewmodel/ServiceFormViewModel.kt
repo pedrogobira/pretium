@@ -18,8 +18,6 @@ class ServiceFormViewModel(application: Application) : AndroidViewModel(applicat
     val service: LiveData<ServiceModel> = _service
 
     fun save(model: ServiceModel) {
-        // val guest = ServiceModel(id, pricePerHour, hours, minutes, day, month, year, description)
-
         if (model.id == 0) {
             _save.value = repository.save(model)
         } else {

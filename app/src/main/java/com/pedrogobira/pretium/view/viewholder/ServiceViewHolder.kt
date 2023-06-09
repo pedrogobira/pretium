@@ -36,7 +36,10 @@ class ServiceViewHolder(
         }
 
         item.textPrice.text =
-            String.format("%.2f", ((service.hours + service.minutes / 60) * service.pricePerHour))
+            String.format(
+                "%.2f",
+                ((service.hours.toDouble() + service.minutes.toDouble() / 60.0) * service.pricePerHour)
+            )
 
         item.textHours.text = "${hoursStr}h${minutesStr}"
         item.textDate.text = "${dayStr}/${monthStr}/${service.year}"

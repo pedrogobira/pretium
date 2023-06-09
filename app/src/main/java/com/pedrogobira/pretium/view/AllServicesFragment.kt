@@ -51,6 +51,7 @@ class AllServicesFragment : Fragment() {
         adapter.attachListener(listener)
 
         viewModel.getAll()
+        viewModel.calculateTotalPrice()
 
         return binding.root
     }
@@ -58,6 +59,7 @@ class AllServicesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getAll()
+        viewModel.calculateTotalPrice()
     }
 
     override fun onDestroyView() {
@@ -68,6 +70,9 @@ class AllServicesFragment : Fragment() {
     private fun observe() {
         viewModel.list.observe(viewLifecycleOwner) {
             adapter.updateServices(it)
+        }
+        viewModel.totalRevenue.observe(viewLifecycleOwner) {
+            binding.textTotalPrice.text = "R$ ${String.format("%.2f", it)}"
         }
     }
 }
