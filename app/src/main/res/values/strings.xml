@@ -12,7 +12,7 @@
     <string name="cadastro_convidado">Cadastro de convidados</string>
     <string name="ausentes">Ausentes</string>
     <string name="servicos_por_mes">Serviços por mês</string>
-    <string name="todos_servicos">Todos serviços</string>
+    <string name="servicos_atuais">Serviços nesse mês</string>
     <string name="salvar">Salvar</string>
     <string name="ausente">Ausente</string>
     <string name="presente">Presente</string>
@@ -27,4 +27,5 @@
     <string name="total">Total</string>
     <string name="text_date">Data</string>
     <string name="choose_date">Clique aqui para escolher a data</string>
+    <string name="search">buscar</string>
 </resources>

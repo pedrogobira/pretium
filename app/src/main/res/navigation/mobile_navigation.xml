@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_all"
         android:name="com.pedrogobira.pretium.view.AllServicesFragment"
-        android:label="@string/todos_servicos"
+        android:label="@string/servicos_atuais"
         tools:layout="@layout/fragment_all" />
 
     <fragment

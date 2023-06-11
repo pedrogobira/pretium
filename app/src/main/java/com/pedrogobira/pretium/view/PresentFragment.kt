@@ -8,13 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.pedrogobira.pretium.R
 import com.pedrogobira.pretium.databinding.FragmentPresentBinding
 import com.pedrogobira.pretium.service.constants.ServiceConstants
 import com.pedrogobira.pretium.view.adapter.ServiceAdapter
 import com.pedrogobira.pretium.view.listener.ServiceListener
 import com.pedrogobira.pretium.viewmodel.ServicesViewModel
 
-class PresentFragment : Fragment() {
+class PresentFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentPresentBinding? = null
     private val binding get() = _binding!!
@@ -30,7 +32,6 @@ class PresentFragment : Fragment() {
         binding.recyclerPresents.layoutManager = LinearLayoutManager(context)
         binding.recyclerPresents.adapter = adapter
 
-        // Listener
         val listener = object : ServiceListener {
             override fun onClick(id: Int) {
                 val intent = Intent(context, ServiceFormActivity::class.java)
@@ -44,21 +45,31 @@ class PresentFragment : Fragment() {
 
             override fun onDelete(id: Int) {
                 viewModel.delete(id)
-                //viewModel.getPresent()
+                getAll()
             }
         }
 
-        // Cria os observadores
+        binding.buttonSearchServices.setOnClickListener(this)
+
         observe()
 
         adapter.attachListener(listener)
+
         return binding.root
+    }
+
+    override fun onClick(v: View) {
+        val id = v.id
+        if (id == R.id.button_search_services) {
+            getAll()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        //viewModel.getPresent()
+        getAll()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -69,5 +80,51 @@ class PresentFragment : Fragment() {
         viewModel.list.observe(viewLifecycleOwner) {
             adapter.updateServices(it)
         }
+        viewModel.totalRevenue.observe(viewLifecycleOwner) {
+            binding.textTotalPrice.text = "R$ ${String.format("%.2f", it)}"
+        }
+    }
+
+    private fun getMonth(): Int? {
+        val monthStr = binding.editMonth.text.toString()
+
+        if (monthStr.isEmpty()) {
+            return null
+        }
+
+        val month = monthStr.toIntOrNull()
+
+        if (month != null && month !in 1..12) {
+            return null
+        }
+
+        return month
+    }
+
+    private fun getYear(): Int? {
+        val yearStr = binding.editYear.text.toString()
+
+        if (yearStr.isEmpty()) {
+            return null
+        }
+
+        return yearStr.toIntOrNull()
+    }
+
+    private fun getAll() {
+        val month = getMonth()
+        val year = getYear()
+
+        if (month == null || year == null) {
+            Snackbar.make(
+                requireView(),
+                "Todos os campos são necessários. Informe valores válidos",
+                Snackbar.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        viewModel.getAll(month, year)
+        viewModel.calculateTotalPrice(month, year)
     }
 }

@@ -17,16 +17,23 @@ class ServicesViewModel(application: Application) : AndroidViewModel(application
     private val _totalRevenue = MutableLiveData<Double>()
     val totalRevenue: LiveData<Double> = _totalRevenue
 
-    fun getAll() {
+    fun getAll(month: Int? = null, year: Int? = null) {
+        if (month != null && year != null) {
+            _list.value = repository.getByMonthAndYear(month, year)
+            return
+        }
         _list.value = repository.getAll()
     }
 
-    fun calculateTotalPrice() {
-        val currentDate = LocalDate.now()
-        val services = repository.getByMonthAndYear(currentDate.monthValue, currentDate.year)
-        var totalPrice: Double = 0.0
-        for (service in services) {
-            totalPrice += (service.hours.toDouble() + service.minutes.toDouble() / 60.0) * service.pricePerHour
+    fun calculateTotalPrice(month: Int? = null, year: Int? = null) {
+        val services: List<ServiceModel> = if (month == null || year == null) {
+            repository.getByMonthAndYear(LocalDate.now().monthValue, LocalDate.now().year)
+        } else {
+            repository.getByMonthAndYear(month, year)
+        }
+
+        val totalPrice: Double = services.sumOf { service ->
+            (service.hours.toDouble() + service.minutes.toDouble() / 60.0) * service.pricePerHour
         }
         _totalRevenue.value = totalPrice
     }
@@ -35,5 +42,4 @@ class ServicesViewModel(application: Application) : AndroidViewModel(application
         repository.delete(id)
         calculateTotalPrice()
     }
-
 }

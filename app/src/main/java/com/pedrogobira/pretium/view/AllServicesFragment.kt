@@ -13,6 +13,7 @@ import com.pedrogobira.pretium.service.constants.ServiceConstants
 import com.pedrogobira.pretium.view.adapter.ServiceAdapter
 import com.pedrogobira.pretium.view.listener.ServiceListener
 import com.pedrogobira.pretium.viewmodel.ServicesViewModel
+import java.time.LocalDate
 
 class AllServicesFragment : Fragment() {
 
@@ -42,7 +43,7 @@ class AllServicesFragment : Fragment() {
 
             override fun onDelete(id: Int) {
                 viewModel.delete(id)
-                viewModel.getAll()
+                viewModel.getAll(LocalDate.now().monthValue, LocalDate.now().year)
             }
         }
 
@@ -50,7 +51,7 @@ class AllServicesFragment : Fragment() {
 
         adapter.attachListener(listener)
 
-        viewModel.getAll()
+        viewModel.getAll(LocalDate.now().monthValue, LocalDate.now().year)
         viewModel.calculateTotalPrice()
 
         return binding.root
@@ -58,7 +59,7 @@ class AllServicesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAll()
+        viewModel.getAll(LocalDate.now().monthValue, LocalDate.now().year)
         viewModel.calculateTotalPrice()
     }
 

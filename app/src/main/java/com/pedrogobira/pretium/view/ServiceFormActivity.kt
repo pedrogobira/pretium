@@ -31,8 +31,6 @@ class ServiceFormActivity : AppCompatActivity(), View.OnClickListener,
         binding = ActivityServiceFormBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         viewModel = ViewModelProvider(this).get(ServiceFormViewModel::class.java)
 
         // Eventos
@@ -68,7 +66,7 @@ class ServiceFormActivity : AppCompatActivity(), View.OnClickListener,
                 return
             }
 
-            if (!(hours in 0..23 && minutes in 0..59 )) {
+            if (!(hours in 0..23 && minutes in 0..59)) {
                 Toast.makeText(this, "Horas ou minutos inválidos", Toast.LENGTH_SHORT).show()
                 return
             }
