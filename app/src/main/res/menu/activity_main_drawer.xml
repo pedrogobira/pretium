@@ -10,5 +10,8 @@
         <item
             android:id="@+id/nav_present"
             android:title="@string/menu_filtrados_por_mes" />
+        <item
+            android:id="@+id/nav_tax_simulation"
+            android:title="@string/tax_simulation" />
     </group>
 </menu>

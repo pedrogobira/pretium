@@ -73,7 +73,7 @@ class AllServicesFragment : Fragment() {
             adapter.updateServices(it)
         }
         viewModel.totalRevenue.observe(viewLifecycleOwner) {
-            binding.textTotalPrice.text = "R$ ${String.format("%.2f", it)}"
+            binding.textGrossAmount.text = "R$ ${String.format("%.2f", it)}"
         }
     }
 }

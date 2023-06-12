@@ -16,4 +16,10 @@
         android:name="com.pedrogobira.pretium.view.PresentFragment"
         android:label="@string/servicos_por_mes"
         tools:layout="@layout/fragment_present" />
+
+    <fragment
+        android:id="@+id/nav_tax_simulation"
+        android:name="com.pedrogobira.pretium.view.TaxSimulationFragment"
+        android:label="@string/tax_simulation"
+        tools:layout="@layout/fragment_present" />
 </navigation>

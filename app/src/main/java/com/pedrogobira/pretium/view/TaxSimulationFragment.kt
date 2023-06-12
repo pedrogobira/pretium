@@ -7,30 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.pedrogobira.pretium.R
-import com.pedrogobira.pretium.databinding.FragmentPresentBinding
+import com.pedrogobira.pretium.databinding.FragmentTaxSimulationBinding
 import com.pedrogobira.pretium.service.constants.ServiceConstants
-import com.pedrogobira.pretium.view.adapter.ServiceAdapter
 import com.pedrogobira.pretium.view.listener.ServiceListener
 import com.pedrogobira.pretium.viewmodel.ServicesViewModel
 
-class PresentFragment : Fragment(), View.OnClickListener {
+class TaxSimulationFragment : Fragment(), View.OnClickListener {
 
-    private var _binding: FragmentPresentBinding? = null
+    private var _binding: FragmentTaxSimulationBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ServicesViewModel
-    private val adapter = ServiceAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, b: Bundle?): View {
 
         viewModel = ViewModelProvider(this).get(ServicesViewModel::class.java)
-        _binding = FragmentPresentBinding.inflate(inflater, container, false)
-
-        binding.recyclerPresents.layoutManager = LinearLayoutManager(context)
-        binding.recyclerPresents.adapter = adapter
+        _binding = FragmentTaxSimulationBinding.inflate(inflater, container, false)
 
         val listener = object : ServiceListener {
             override fun onClick(id: Int) {
@@ -52,8 +46,6 @@ class PresentFragment : Fragment(), View.OnClickListener {
         binding.buttonSearchServices.setOnClickListener(this)
 
         observe()
-
-        adapter.attachListener(listener)
 
         return binding.root
     }
@@ -77,11 +69,21 @@ class PresentFragment : Fragment(), View.OnClickListener {
     }
 
     private fun observe() {
-        viewModel.list.observe(viewLifecycleOwner) {
-            adapter.updateServices(it)
-        }
         viewModel.totalRevenue.observe(viewLifecycleOwner) {
-            binding.textGrossAmount.text = "R$ ${String.format("%.2f", it)}"
+            binding.textGrossAmount.text = "Valor bruto: R$ ${String.format("%.2f", it)}"
+        }
+        viewModel.tax.observe(viewLifecycleOwner) {
+            binding.textTax.text = "Tributação: ${it.descriptor} ${it.type} no valor de R\$ ${
+                String.format(
+                    "%.2f", it.value
+                )
+            }"
+            binding.textProlabore.text = "Pró-labore: ${getProlabore()}"
+            binding.textNetAmount.text = "Valor líquido: R$ ${
+                String.format(
+                    "%.2f", viewModel.totalRevenue.value!! - it.value - getProlabore()!!
+                )
+            }"
         }
     }
 
@@ -111,11 +113,23 @@ class PresentFragment : Fragment(), View.OnClickListener {
         return yearStr.toIntOrNull()
     }
 
+    private fun getProlabore(): Double? {
+        val prolaboreStr = binding.editProlabore.text.toString()
+        return prolaboreStr.toDoubleOrNull()
+    }
+
+    private fun clearPostGrossAmountData() {
+        binding.textNetAmount.text = ""
+        binding.textProlabore.text = ""
+        binding.textTax.text = ""
+    }
+
     private fun loadData() {
         val month = getMonth()
         val year = getYear()
+        val prolabore = getProlabore()
 
-        if (month == null || year == null) {
+        if (month == null || year == null || prolabore == null) {
             Snackbar.make(
                 requireView(),
                 "Todos os campos são necessários. Informe valores válidos",
@@ -126,5 +140,15 @@ class PresentFragment : Fragment(), View.OnClickListener {
 
         viewModel.getAll(month, year)
         viewModel.calculateTotalPrice(month, year)
+
+        if (viewModel.totalRevenue.value!! < prolabore) {
+            Snackbar.make(
+                requireView(), "Pró-labore maior que o valor bruto mensal", Snackbar.LENGTH_LONG
+            ).show()
+            clearPostGrossAmountData()
+            return
+        }
+
+        viewModel.calculateTax(viewModel.totalRevenue.value!!, prolabore)
     }
 }

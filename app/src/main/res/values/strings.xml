@@ -28,4 +28,7 @@
     <string name="text_date">Data</string>
     <string name="choose_date">Clique aqui para escolher a data</string>
     <string name="search">buscar</string>
+    <string name="pr_labore">Pró-labore:</string>
+    <string name="tax_simulation">Simulação de tributos (DAS)</string>
+    <string name="simulate">simular</string>
 </resources>
