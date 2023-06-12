@@ -21,5 +21,5 @@
         android:id="@+id/nav_tax_simulation"
         android:name="com.pedrogobira.pretium.view.TaxSimulationFragment"
         android:label="@string/tax_simulation"
-        tools:layout="@layout/fragment_present" />
+        tools:layout="@layout/fragment_tax_simulation" />
 </navigation>
